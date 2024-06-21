@@ -50,7 +50,7 @@ jobs:
               with:
                 role-to-assume: ${{ env.ASSUME_ROLE}}
                 role-session-name: ${{ env.DEPLOY_ENV }}
-                aws-region: ${{ AWS_REGION }}
+                aws-region: ${{ env.AWS_REGION }}
               env:
                 DEPLOY_ENV: ${{ (needs.Set_env.outputs.REF_NAME == 'main' || startsWith(needs.Set_env.outputs.REF_NAME, 'v.')) && 'production' || 'staging' }}
 
