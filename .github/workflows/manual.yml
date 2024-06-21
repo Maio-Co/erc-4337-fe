@@ -2,7 +2,11 @@ name: FE Deployment
 run-name: FE Deployment by @${{ github.actor }}
 
 on: 
-    workflow_call:
+    workflow_dispatch:
+
+permissions:
+    id-token: write  # This is required for requesting the JWT
+    contents: read   # This is required for actions/checkout
 
 env:
     PROJECT_NAME: "4337-demo FE"
