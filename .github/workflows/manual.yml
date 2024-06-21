@@ -47,6 +47,9 @@ jobs:
                 role-to-assume: ${{ ASSUME_ROLE}}
                 role-session-name: ${{ DEPLOY_ENV }}
                 aws-region: ${{ AWS_REGION }}
+              env:
+                DEPLOY_ENV: ${{ (needs.Set_env.outputs.REF_NAME == 'main' || startsWith(needs.Set_env.outputs.REF_NAME, 'v.')) && 'production' || 'staging' }}
+
 
             - name: Security Token Service (STS) get caller identity
               run: aws sts get-caller-identity
