@@ -80,7 +80,7 @@ export const toCamel = <T>(data: T): T => {
 
   const newData: any = {}
   for (const key in data) {
-    const newKey = key.replace(/_([0-9a-z])/g, (p, m) =>
+    const newKey = key.replace(/_([0-9a-z])/g, (_, m) =>
       (m as string).toUpperCase(),
     )
     newData[newKey] = toCamel(data[key])
