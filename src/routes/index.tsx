@@ -5,6 +5,8 @@ import Layout from '@/pages/layout'
 
 const routes = [
   { key: 'home', path: '/', index: true, component: lazy(() => import('@/pages/home')) },
+  { key: 'login', path: '/login', index: false, component: lazy(() => import('@/pages/login')) },
+  { key: 'login-callback', path: '/login-callback', index: false, component: lazy(() => import('@/pages/login-callback')) },
   // { key: 'market', path: '/market', index: false, component: lazy(() => import('@/pages/market')) },
   // { key: 'economy', path: '/economy', index: false, component: lazy(() => import('@/pages/economy')) },
   // { key: 'economy', path: '/economy/:category', index: false, component: lazy(() => import('@/pages/economy-category')) },

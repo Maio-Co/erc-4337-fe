@@ -52,8 +52,7 @@ jobs:
                 role-session-name: ${{ env.DEPLOY_ENV }}
                 aws-region: ${{ env.AWS_REGION }}
               env:
-                DEPLOY_ENV: ${{ (needs.Set_env.outputs.REF_NAME == 'main' || startsWith(needs.Set_env.outputs.REF_NAME, 'v.')) && 'production' || 'staging' }}
-
+                DEPLOY_ENV: ${{ (needs.Set_env.outputs.REF_NAME == 'master' || startsWith(needs.Set_env.outputs.REF_NAME, 'v.')) && 'production' || 'staging' }}
 
             - name: Security Token Service (STS) get caller identity
               run: aws sts get-caller-identity
@@ -61,15 +60,12 @@ jobs:
             - name: Yarn build
               run: |
                 yarn
-                yarn build:${{ env.DEPLOY_ENV }}
+                yarn build
               env:
-                DEPLOY_ENV: ${{ (needs.Set_env.outputs.REF_NAME == 'main' || startsWith(needs.Set_env.outputs.REF_NAME, 'v.')) && 'production' || 'staging' }}
-
+                DEPLOY_ENV: ${{ (needs.Set_env.outputs.REF_NAME == 'master' || startsWith(needs.Set_env.outputs.REF_NAME, 'v.')) && 'production' || 'staging' }}
 
             - name: Upload to S3 bucket
               run: aws s3 sync ./${{ env.BUILD_PATH }} s3://${{ secrets.AWS_S3_BUCKET }} --delete
 
             - name: Create invalidation for CloudFront distribution
-              run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"      
-
-            
+              run: aws cloudfront create-invalidation --distribution-id ${{ secrets.AWS_DISTRIBUTION_ID }} --paths "/*"

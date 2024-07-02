@@ -16,18 +16,17 @@ export default defineConfig(({ mode }) => {
       port: 8000,
       proxy: {
         '^/api': {
-          // target: mode === 'development' ? 'https://www.google.com' : '/',
-          target: mode === 'development' ? '/' : '/',
+          target: mode === 'development' ? 'https://4337-server.api.maio.co' : '/',
           rewrite: path => path.replace(/^\/api/, ''),
           changeOrigin: true,
           secure: false,
           ws: true,
         },
-        '^/images': {
-          target: mode === 'development' ? '/' : '/',
-          changeOrigin: true,
-          secure: false,
-        }
+        // '^/images': {
+        //   target: mode === 'development' ? '/' : '/',
+        //   changeOrigin: true,
+        //   secure: false,
+        // }
       }
     },
   }

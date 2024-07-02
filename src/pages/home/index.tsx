@@ -1,7 +1,9 @@
 const Home = () => {
 
   return (
-    <div>Home</div>
+    <div className="px-10 py-5 text-white">
+        Home Page.
+    </div>
   )
 }
 

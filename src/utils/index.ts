@@ -71,3 +71,19 @@ export const copy = (text: string) => {
   navigator.clipboard.writeText(text)
     .then(() => toast.success(`Copied: ${text}`))
 }
+
+// 底線 -> 小駝峰
+export const toCamel = <T>(data: T): T => {
+  if (typeof data != 'object' || !data) return data
+  if (Array.isArray(data))
+    return data.map(item => toCamel<T>(item)) as typeof data
+
+  const newData: any = {}
+  for (const key in data) {
+    const newKey = key.replace(/_([0-9a-z])/g, (_, m) =>
+      (m as string).toUpperCase(),
+    )
+    newData[newKey] = toCamel(data[key])
+  }
+  return newData as T
+}

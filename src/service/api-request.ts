@@ -1,14 +1,28 @@
 import axios from 'axios'
-import { isDevelopmentMode } from '@/utils'
+import { isDevelopmentMode, toCamel } from '@/utils'
 
-const BASE_URL = isDevelopmentMode() ? '/api' : '/'
 
-export const request = axios.create({ baseURL: BASE_URL, withCredentials: true })
+
+const BASE_URL = isDevelopmentMode() ? '/api' : 'https://4337-server.api.maio.co'
+// const BASE_URL = isDevelopmentMode() ? 'https://4337-server.api.maio.co' : '/'
+
+export const APIRequest = axios.create({ baseURL: BASE_URL, withCredentials: true })
 
 export const fetcherData = (url: string) => {
-  return request.get(url).then(res => res.data.data)
+  return APIRequest.get(url).then(res => res.data.data)
 }
 
 export const fetcher = (url: string) => {
-  return request.get(url).then(res => res.data)
+  return APIRequest.get(url).then(res => res.data)
+}
+
+
+export const GetLoginCallback = (params: User.GetLoginCallback.Req): ApiService<User.GetLoginCallback.Res> => {
+
+  return APIRequest.get('/v0/login', { params })
+    .then(res => ({ isError: false, value: toCamel(res.data) }))
+    .catch(err => {
+    // apiErrorMessage(err)
+      return { isError: true, value: err.response?.data.error }
+    })
 }
