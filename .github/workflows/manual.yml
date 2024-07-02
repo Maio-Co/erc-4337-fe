@@ -10,7 +10,7 @@ permissions:
 
 env:
     PROJECT_NAME: "4337-demo FE"
-    ASSUME_ROLE: "arn:aws:iam::736713101834:role/Github-action-for-MaioCo-4337demo-fe"
+    ASSUME_ROLE: "arn:aws:iam::304661646682:role/Github-action-for-MaioCo-4337demo-fe"
     AWS_REGION: "ap-northeast-1"
     BUILD_PATH: "./dist"
 
