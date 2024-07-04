@@ -3,8 +3,7 @@ import { isDevelopmentMode, toCamel } from '@/utils'
 
 
 
-const BASE_URL = isDevelopmentMode() ? '/api' : 'https://4337-server.api.maio.co'
-// const BASE_URL = isDevelopmentMode() ? 'https://4337-server.api.maio.co' : '/'
+const BASE_URL = isDevelopmentMode() ? 'https://4337.api.maio.co/api' : '/api'
 
 export const APIRequest = axios.create({ baseURL: BASE_URL, withCredentials: true })
 
