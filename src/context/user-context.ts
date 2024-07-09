@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createContainer } from 'unstated-next'
+import { setAuth, GetUserProfile, GetWalletCheck, DeployWalletContract, SendUserOperation } from '@/service/api-request'
 
 function parseJwt (token) {
   const base64Url = token.split('.')[1]
@@ -12,7 +13,13 @@ function parseJwt (token) {
 }
 
 function useUser() {
-  // const [token, setToken] = useState('eyJhbGciOiJSUzI1NiIsImtpZCI6ImNlcnQtYnVpbHQtaW4iLCJ0eXAiOiJKV1QifQ.eyJvd25lciI6Im9yZ2FuaXphdGlvbl9kaXZlcl8ybW9vemgiLCJuYW1lIjoidGVkZHkubGluQG1haW8uY28iLCJjcmVhdGVkVGltZSI6IjIwMjQtMDYtMjRUMDg6MTU6NTlaIiwidXBkYXRlZFRpbWUiOiIyMDI0LTA2LTI1VDA2OjQwOjU2WiIsImRlbGV0ZWRUaW1lIjoiIiwiaWQiOiIxMDY0NTg0NDMyNDc2MTYyODQzMzEiLCJ0eXBlIjoibm9ybWFsLXVzZXIiLCJwYXNzd29yZCI6IiIsInBhc3N3b3JkU2FsdCI6IiIsInBhc3N3b3JkVHlwZSI6InBsYWluIiwiZGlzcGxheU5hbWUiOiJUZWRkeSBMaW4iLCJmaXJzdE5hbWUiOiIiLCJsYXN0TmFtZSI6IiIsImF2YXRhciI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tKNk45VDAxR1k4YkxGNjRfck9USllZanMxcndvdzJzMUY2YjlIMlN5Z0NtMHNXQT1zOTYtYyIsImF2YXRhclR5cGUiOiIiLCJwZXJtYW5lbnRBdmF0YXIiOiIiLCJlbWFpbCI6InRlZGR5LmxpbkBtYWlvLmNvIiwiZW1haWxWZXJpZmllZCI6ZmFsc2UsInBob25lIjoiIiwiY291bnRyeUNvZGUiOiIiLCJyZWdpb24iOiIiLCJsb2NhdGlvbiI6IiIsImFkZHJlc3MiOltdLCJhZmZpbGlhdGlvbiI6IiIsInRpdGxlIjoiIiwiaWRDYXJkVHlwZSI6IiIsImlkQ2FyZCI6IiIsImhvbWVwYWdlIjoiIiwiYmlvIjoiIiwibGFuZ3VhZ2UiOiIiLCJnZW5kZXIiOiIiLCJiaXJ0aGRheSI6IiIsImVkdWNhdGlvbiI6IiIsInNjb3JlIjowLCJrYXJtYSI6MCwicmFua2luZyI6MywiaXNEZWZhdWx0QXZhdGFyIjpmYWxzZSwiaXNPbmxpbmUiOmZhbHNlLCJpc0FkbWluIjpmYWxzZSwiaXNGb3JiaWRkZW4iOmZhbHNlLCJpc0RlbGV0ZWQiOmZhbHNlLCJzaWdudXBBcHBsaWNhdGlvbiI6ImFwcGxpY2F0aW9uX3Vqcnl3OCIsImhhc2giOiIiLCJwcmVIYXNoIjoiIiwiYWNjZXNzS2V5IjoiIiwiYWNjZXNzU2VjcmV0IjoiIiwiZ2l0aHViIjoiIiwiZ29vZ2xlIjoiMTA2NDU4NDQzMjQ3NjE2Mjg0MzMxIiwicXEiOiIiLCJ3ZWNoYXQiOiIiLCJmYWNlYm9vayI6IiIsImRpbmd0YWxrIjoiIiwid2VpYm8iOiIiLCJnaXRlZSI6IiIsImxpbmtlZGluIjoiIiwid2Vjb20iOiIiLCJsYXJrIjoiIiwiZ2l0bGFiIjoiIiwiY3JlYXRlZElwIjoiIiwibGFzdFNpZ25pblRpbWUiOiIiLCJsYXN0U2lnbmluSXAiOiIiLCJwcmVmZXJyZWRNZmFUeXBlIjoiIiwicmVjb3ZlcnlDb2RlcyI6bnVsbCwidG90cFNlY3JldCI6IiIsIm1mYVBob25lRW5hYmxlZCI6ZmFsc2UsIm1mYUVtYWlsRW5hYmxlZCI6ZmFsc2UsImxkYXAiOiIiLCJwcm9wZXJ0aWVzIjp7Im5vIjoiNCIsIm9hdXRoX0dvb2dsZV9hdmF0YXJVcmwiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLSjZOOVQwMUdZOGJMRjY0X3JPVEpZWWpzMXJ3b3cyczFGNmI5SDJTeWdDbTBzV0E9czk2LWMiLCJvYXV0aF9Hb29nbGVfZGlzcGxheU5hbWUiOiJUZWRkeSBMaW4iLCJvYXV0aF9Hb29nbGVfZW1haWwiOiJ0ZWRkeS5saW5AbWFpby5jbyIsIm9hdXRoX0dvb2dsZV9pZCI6IjEwNjQ1ODQ0MzI0NzYxNjI4NDMzMSIsIm9hdXRoX0dvb2dsZV91c2VybmFtZSI6InRlZGR5LmxpbkBtYWlvLmNvIn0sInJvbGVzIjpbXSwicGVybWlzc2lvbnMiOltdLCJncm91cHMiOltdLCJsYXN0U2lnbmluV3JvbmdUaW1lIjoiIiwic2lnbmluV3JvbmdUaW1lcyI6MCwidG9rZW5UeXBlIjoiYWNjZXNzLXRva2VuIiwidGFnIjoiIiwic2NvcGUiOiJyZWFkIiwiaXNzIjoiaHR0cHM6Ly9vYXV0aC5hcGkubWFpby5jbyIsInN1YiI6IjEwNjQ1ODQ0MzI0NzYxNjI4NDMzMSIsImF1ZCI6WyI1MDI5MmM4ZTdlZTRiMmYyZjU1NCJdLCJleHAiOjE3MTk5MDI0NTYsIm5iZiI6MTcxOTI5NzY1NiwiaWF0IjoxNzE5Mjk3NjU2LCJqdGkiOiJhZG1pbi80NzY2ZWQ0Yy02MmY0LTRjZWEtOTdhYy1kYmRjYmU0ODk0MjcifQ.AWmxLCVFfmE9Vh8845s5S6npX4FVMV4-yOL-xtre3r6-sW4tSSNIRw4Reg_6MH-t-yuUfyfeI1rNmUitvRVXAIsomLcDIYOs2292GvStXIU15yyuWHiCxmb7_NszQadAiRULN82fjBdp76-C772-yEYGjJ5B1DG5ZGUGwCBwQ1JGitKqPvE7e75k4YmhQf57AqEKeyUlH7JKXIim7je1DfXZse0XXRpDEvNLixHKU1bpJU5fWOAUlR4lWxP1BDPwd1a29ns5ch1J7_3omMixLqTZb1keyvWZRxVPIy71pmrA5bFK_Rj7YZW62UMY5xu96fukolQhD_wCqO1-lFk5DuohwdD_qYfOx46KtaP0mK0pvxpyQXJnEPaE37Df6s1ACZXXpvUzREyrL9kIx5uC40Lg02PpHHTs2haF1Q3v8U6DCGK8yn14uJZXuMYpGGZOP0-5puzJUQj8a7lm-kbV0EdnjcmSYN3qCRJ7-ZAT6ZiVZRY-wGle_bl57YnIqIxX01aDAnT2myWnSC98XajsJPrFrzulgLhOnH8PsXGOBmTFkMNe-zLlgKxjoMrWuvDoXKC1ydCNzIrs0dNfG_YWd6k104-txeljnvmgSG-ldei8LChcSoONhHGnRP9fjJ__jwcjxMBHjsJpX-FWL4froU9O6UudxrXvNAw7KiQo74M')
+  useEffect(() => {
+    const jwt = localStorage.getItem('jwt') || ''
+    setToken(jwt)
+  }, [])
+
+
+  // token
   const [token, setToken] = useState('')
 
   const userPayload: UserPayload = useMemo(() => {
@@ -23,15 +30,44 @@ function useUser() {
     return decodedToken
   }, [token])
 
+
+  // profile
+  const [profile, setProfile] = useState({ name: '', address: '' })
+
   useEffect(() => {
-    const jwt = localStorage.getItem('jwt') || ''
-    setToken(jwt)
-  }, [])
+    if (!token) return
+
+    getUser(token)
+    async function getUser (token: string) {
+      setAuth(token)
+      const { isError, value } = await GetUserProfile()
+      if (!isError) setProfile(value)
+    }
+  }, [token])
+
+  // send useroperation
+  const sendTransaction = async (userOperation: UserOperation) => {
+    // 1. check
+    const { isError: isErrorCheck, value } = await GetWalletCheck()
+    if (isErrorCheck) return console.log('Check address error.')
+
+    // 2. deploy
+    if (!value.deployed) {
+      const { isError: isErrorDeploy, value } = await DeployWalletContract()
+      if (isErrorDeploy || !value.deployed) return console.log('Deploy contract failed.')
+    }
+
+    // 3. send Tx
+    const { isError: isErrorSend } = await SendUserOperation(userOperation)
+    if (isErrorSend) return console.log('Send Transaction error.')
+  }
 
   return {
+    profile,
     token,
     setToken,
     userPayload,
+    sendTransaction,
   }
 }
 

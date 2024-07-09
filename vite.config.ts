@@ -16,7 +16,7 @@ export default defineConfig(({ mode }) => {
       port: 8000,
       proxy: {
         '^/api': {
-          target: mode === 'development' ? 'https://4337.api.maio.co/api' : '/api',
+          target: mode === 'development' ? 'https://iemyfu9bek.execute-api.ap-northeast-1.amazonaws.com/test/api' : '/api',
           rewrite: path => path.replace(/^\/api/, ''),
           changeOrigin: true,
           secure: false,

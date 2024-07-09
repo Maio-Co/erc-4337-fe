@@ -23,7 +23,10 @@ const LoginCallback = () => {
   }, [code])
 
   return (
-    <div>Logging...</div>
+    <div className="flex">
+      <div className="mx-auto pt-20 text-4xl font-bold">Logging...</div>
+
+    </div>
   )
 }
 
