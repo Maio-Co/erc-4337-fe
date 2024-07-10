@@ -15,10 +15,6 @@
   font-size: 14px;
   font-weight: 400;
 
-  /* color: #121214; */
-  color: white;
-  background-color: #2a2932;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -42,11 +38,24 @@ img {
   user-select: none;
 }
 
+/* 當用戶偏好深色主題時 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #FFFFFF;
+    background-color: #2a2932;
+  }
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
     background-color: #ffffff;
   }
+
+  input {
+    border: 1px solid;
+  }
+
   a:hover {
     color: #747bff;
   }

@@ -88,7 +88,7 @@ const Home = () => {
   }
 
   return (
-    <div className="px-10 py-5 text-white">
+    <div className="px-10 py-5">
       <div className="flex items-center gap-4">
         <span>Wallet Address</span>
         <span className="font-bold text-lg text-primary">{ profile.address }</span>
@@ -106,14 +106,14 @@ const Home = () => {
 
       <div className="flex items-center gap-4">
         <span>Transfer To</span>
-        <input name="to" type="text" className="p-2 text-text" onChange={handleChange} />
+        <input name="to" type="text" className="p-2" onChange={handleChange} />
       </div>
 
       <br />
 
       <div className="flex items-center gap-4">
         <span>Transfer Amount</span>
-        <input name="amount" type="text" className="p-2 text-text" onChange={handleChange} />
+        <input name="amount" type="text" className="p-2" onChange={handleChange} />
       </div>
 
       <br />
